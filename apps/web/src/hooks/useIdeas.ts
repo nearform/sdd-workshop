@@ -10,6 +10,8 @@ export type UseIdeasState = {
 
 export type UseIdeasResult = UseIdeasState & {
   createIdea: (input: NewIdeaInput) => Promise<Idea>;
+  replaceIdea: (idea: Idea) => void;
+  removeIdea: (id: string) => void;
   refresh: () => Promise<void>;
 };
 
@@ -66,9 +68,25 @@ export function useIdeas(): UseIdeasResult {
     }
   }, []);
 
+  const replaceIdea = useCallback((idea: Idea) => {
+    setState((s) => ({
+      ...s,
+      ideas: s.ideas.map((i) => (i.id === idea.id ? idea : i)),
+    }));
+  }, []);
+
+  const removeIdea = useCallback((id: string) => {
+    setState((s) => ({
+      ...s,
+      ideas: s.ideas.filter((i) => i.id !== id),
+    }));
+  }, []);
+
   return {
     ...state,
     createIdea: create,
+    replaceIdea,
+    removeIdea,
     refresh,
   };
 }
