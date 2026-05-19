@@ -1,0 +1,27 @@
+{
+  "name": "@idea-garden/server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "DB_PATH=${DB_PATH:-../../data/garden.db} node --experimental-strip-types --watch src/index.ts",
+    "start": "DB_PATH=${DB_PATH:-../../data/garden.db} node --experimental-strip-types src/index.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fastify/cors": "^10.0.1",
+    "@idea-garden/shared": "*",
+    "better-sqlite3": "^11.5.0",
+    "fastify": "^5.1.0",
+    "fastify-type-provider-zod": "^3.0.0",
+    "ulid": "^2.3.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.11",
+    "@types/node": "^22.9.0",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.4"
+  }
+}
