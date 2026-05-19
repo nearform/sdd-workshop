@@ -1,0 +1,185 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-neutral text-on-surface font-sans antialiased;
+  }
+}
+
+/* ---------- Landing page utilities (only used by /start) ---------- */
+
+@layer utilities {
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+      opacity 0.9s cubic-bezier(0.2, 0.7, 0.1, 1),
+      transform 0.9s cubic-bezier(0.2, 0.7, 0.1, 1);
+    will-change: opacity, transform;
+  }
+  .reveal-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .card-tilt {
+    transform: rotate(var(--tilt, 0deg));
+    transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.1, 1);
+  }
+  .card-tilt:hover {
+    transform: rotate(0deg) translateY(-4px);
+  }
+
+  .stage-float {
+    animation: stage-float 6s ease-in-out infinite;
+  }
+
+  @keyframes stage-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+
+  .marquee {
+    --marquee-speed: 38s;
+    animation: marquee var(--marquee-speed) linear infinite;
+  }
+  .marquee-track {
+    flex-shrink: 0;
+  }
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* ---------- /app page atmosphere ---------- */
+
+  .leaf-drift {
+    position: absolute;
+    top: -8vh;
+    will-change: transform, opacity;
+    animation: leaf-drift var(--leaf-duration, 22s) linear var(--leaf-delay, 0s) infinite;
+    pointer-events: none;
+    color: var(--leaf-color, #4f8c3a);
+  }
+  @keyframes leaf-drift {
+    0% {
+      transform: translate3d(0, 0, 0) rotate(0deg);
+      opacity: 0;
+    }
+    8% {
+      opacity: var(--leaf-opacity, 0.35);
+    }
+    50% {
+      transform: translate3d(36px, 55vh, 0) rotate(220deg);
+    }
+    92% {
+      opacity: var(--leaf-opacity, 0.35);
+    }
+    100% {
+      transform: translate3d(-24px, 118vh, 0) rotate(400deg);
+      opacity: 0;
+    }
+  }
+
+  .idea-card {
+    position: relative;
+    transition:
+      transform 0.45s cubic-bezier(0.2, 0.7, 0.1, 1),
+      box-shadow 0.45s ease,
+      border-color 0.45s ease;
+  }
+  .idea-card:hover {
+    transform: translateY(-3px);
+  }
+
+  .card-leaf {
+    position: absolute;
+    top: 10px;
+    right: 22px;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .idea-card:hover .card-leaf {
+    animation: card-leaf-drop 1.4s ease-in forwards;
+  }
+  @keyframes card-leaf-drop {
+    0% {
+      transform: translate(0, 0) rotate(0deg);
+      opacity: 0;
+    }
+    18% {
+      opacity: 0.9;
+    }
+    100% {
+      transform: translate(-18px, 110px) rotate(160deg);
+      opacity: 0;
+    }
+  }
+
+  .plant-rise {
+    transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.1, 1);
+  }
+  .idea-card:hover .plant-rise {
+    transform: translateY(-4px);
+  }
+
+  .ghost-card {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0.25) 100%);
+    border: 1px dashed rgba(31, 42, 34, 0.18);
+    border-radius: 14px;
+  }
+
+  .empty-pulse {
+    animation: empty-pulse 4.5s ease-in-out infinite;
+  }
+  @keyframes empty-pulse {
+    0%,
+    100% {
+      transform: translateY(0) scale(1);
+      opacity: 0.85;
+    }
+    50% {
+      transform: translateY(-4px) scale(1.02);
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+    .marquee,
+    .stage-float,
+    .leaf-drift,
+    .card-leaf,
+    .plant-rise,
+    .empty-pulse,
+    .idea-card {
+      animation: none;
+      transition: none;
+    }
+  }
+}
