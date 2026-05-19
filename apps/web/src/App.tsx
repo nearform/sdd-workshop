@@ -3,13 +3,25 @@ import type { NewIdeaInput } from '@idea-garden/shared';
 import { Header } from './components/Header.tsx';
 import { Garden } from './components/Garden.tsx';
 import { NewIdeaModal } from './components/NewIdeaModal.tsx';
+import { IdeaDetailModal } from './components/IdeaDetailModal.tsx';
 import { PaperGrain } from './components/PaperGrain.tsx';
 import { LeavesLayer } from './components/LeavesLayer.tsx';
 import { useIdeas } from './hooks/useIdeas.ts';
 
 export function App() {
   const [modalOpen, setModalOpen] = useState(false);
-  const { status, ideas, error, createIdea } = useIdeas();
+  const [openIdeaId, setOpenIdeaId] = useState<string | null>(null);
+  const {
+    status,
+    ideas,
+    error,
+    createIdea,
+    addUpdate,
+    editIdea,
+    editUpdate,
+    deleteUpdate,
+    deleteIdea,
+  } = useIdeas();
 
   const handleCreate = async (input: NewIdeaInput) => {
     await createIdea(input);
@@ -37,6 +49,7 @@ export function App() {
           ideas={ideas}
           error={error}
           onPlant={() => setModalOpen(true)}
+          onOpen={(id) => setOpenIdeaId(id)}
         />
       </div>
 
@@ -44,6 +57,16 @@ export function App() {
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         onCreate={handleCreate}
+      />
+
+      <IdeaDetailModal
+        ideaId={openIdeaId}
+        onClose={() => setOpenIdeaId(null)}
+        onAddUpdate={addUpdate}
+        onEditIdea={editIdea}
+        onEditUpdate={editUpdate}
+        onDeleteUpdate={deleteUpdate}
+        onDeleteIdea={deleteIdea}
       />
     </main>
   );

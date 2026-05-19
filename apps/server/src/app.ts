@@ -37,7 +37,7 @@ export function buildApp(opts: BuildAppOptions): FastifyTypedInstance {
 
   app.register(cors, {
     origin: opts.corsOrigin ?? process.env.CORS_ORIGIN ?? 'http://localhost:5173',
-    methods: ['GET', 'POST', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
   });
 
   app.setErrorHandler((error: FastifyError, _request, reply) => {

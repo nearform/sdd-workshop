@@ -7,9 +7,10 @@ type GardenProps = {
   ideas: Idea[];
   error?: string | undefined;
   onPlant: () => void;
+  onOpen?: (id: string) => void;
 };
 
-export function Garden({ status, ideas, error, onPlant }: GardenProps) {
+export function Garden({ status, ideas, error, onPlant, onOpen }: GardenProps) {
   if (status === 'error') {
     return (
       <div
@@ -56,7 +57,12 @@ export function Garden({ status, ideas, error, onPlant }: GardenProps) {
   return (
     <div className="grid gap-grid-gutter grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {ideas.map((idea) => (
-        <IdeaCard key={idea.id} idea={idea} index={plantingOrder.get(idea.id)} />
+        <IdeaCard
+          key={idea.id}
+          idea={idea}
+          index={plantingOrder.get(idea.id)}
+          onOpen={onOpen}
+        />
       ))}
     </div>
   );

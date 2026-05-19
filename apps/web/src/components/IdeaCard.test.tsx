@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import type { Idea } from '@idea-garden/shared';
 import { IdeaCard } from './IdeaCard.tsx';
 
@@ -56,5 +57,26 @@ describe('<IdeaCard>', () => {
     expect(heading.textContent).toBe(tricky);
     // The literal characters are present in textContent and no <script> child was created.
     expect(heading.querySelector('script')).toBeNull();
+  });
+
+  it('invokes onOpen with the idea id when clicked', async () => {
+    const user = userEvent.setup();
+    const onOpen = vi.fn();
+    render(<IdeaCard idea={makeIdea()} now={NOW} onOpen={onOpen} />);
+    await user.click(screen.getByRole('button'));
+    expect(onOpen).toHaveBeenCalledWith('01J9YX0G6Q1A8C5XKHQ2N3R7VB');
+  });
+
+  it('invokes onOpen on Enter keypress when focused', () => {
+    const onOpen = vi.fn();
+    render(<IdeaCard idea={makeIdea()} now={NOW} onOpen={onOpen} />);
+    fireEvent.keyDown(screen.getByRole('button'), { key: 'Enter' });
+    expect(onOpen).toHaveBeenCalledWith('01J9YX0G6Q1A8C5XKHQ2N3R7VB');
+  });
+
+  it('renders baseline content unchanged when onOpen is provided', () => {
+    render(<IdeaCard idea={makeIdea()} now={NOW} onOpen={vi.fn()} />);
+    expect(screen.getByRole('heading')).toHaveTextContent('Build an idea garden');
+    expect(screen.getByText(/playful CRUD app/i)).toBeInTheDocument();
   });
 });

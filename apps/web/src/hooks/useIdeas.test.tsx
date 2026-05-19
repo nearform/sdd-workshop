@@ -137,3 +137,227 @@ describe('useIdeas — createIdea optimistic prepend', () => {
     expect(result.current.ideas).toEqual([]);
   });
 });
+
+describe('useIdeas — addUpdate (US1)', () => {
+  it('replaces the cached idea with the server-returned idea on success', async () => {
+    const before = buildIdea({ stage: 3 });
+    const after = buildIdea({ stage: 4 });
+    const update = {
+      id: 'U'.repeat(26),
+      idea_id: before.id,
+      note: 'sketched',
+      stage_after: 4,
+      created_at: Date.now(),
+    };
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (_url, init: RequestInit | undefined) => {
+        if (init?.method === 'POST') {
+          return okJson(201, { idea: after, prev_stage: 3, update });
+        }
+        return okJson(200, [before]);
+      }),
+    );
+
+    const { result } = renderHook(() => useIdeas());
+    await waitFor(() => expect(result.current.status).toBe('ready'));
+
+    let response: { idea: typeof after } | undefined;
+    await act(async () => {
+      response = await result.current.addUpdate(before.id, { note: 'sketched' });
+    });
+    expect(response?.idea.stage).toBe(4);
+    expect(result.current.ideas).toEqual([after]);
+  });
+
+  it('leaves the cache untouched and rejects on a server error', async () => {
+    const before = buildIdea({ stage: 3 });
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (_url, init: RequestInit | undefined) => {
+        if (init?.method === 'POST') {
+          return okJson(500, { error: 'internal_error' });
+        }
+        return okJson(200, [before]);
+      }),
+    );
+
+    const { result } = renderHook(() => useIdeas());
+    await waitFor(() => expect(result.current.status).toBe('ready'));
+
+    await act(async () => {
+      await expect(
+        result.current.addUpdate(before.id, { note: 'sketched' }),
+      ).rejects.toThrow();
+    });
+    expect(result.current.ideas).toEqual([before]);
+  });
+});
+
+describe('useIdeas — editIdea (US2)', () => {
+  it('replaces the cached idea on a successful patch', async () => {
+    const before = buildIdea({ title: 'old' });
+    const after = buildIdea({ title: 'renamed' });
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (_url, init: RequestInit | undefined) => {
+        if (init?.method === 'PATCH') {
+          return okJson(200, { idea: after, prev_stage: after.stage });
+        }
+        return okJson(200, [before]);
+      }),
+    );
+
+    const { result } = renderHook(() => useIdeas());
+    await waitFor(() => expect(result.current.status).toBe('ready'));
+
+    await act(async () => {
+      await result.current.editIdea(before.id, { title: 'renamed' });
+    });
+    expect(result.current.ideas[0]?.title).toBe('renamed');
+  });
+
+  it('leaves the cache untouched on error', async () => {
+    const before = buildIdea({ title: 'old' });
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (_url, init: RequestInit | undefined) => {
+        if (init?.method === 'PATCH') {
+          return okJson(500, { error: 'internal_error' });
+        }
+        return okJson(200, [before]);
+      }),
+    );
+
+    const { result } = renderHook(() => useIdeas());
+    await waitFor(() => expect(result.current.status).toBe('ready'));
+
+    await act(async () => {
+      await expect(
+        result.current.editIdea(before.id, { title: 'renamed' }),
+      ).rejects.toThrow();
+    });
+    expect(result.current.ideas).toEqual([before]);
+  });
+});
+
+describe('useIdeas — editUpdate + deleteUpdate (US4)', () => {
+  it('editUpdate replaces the cached idea on success', async () => {
+    const before = buildIdea({ stage: 4 });
+    const after = buildIdea({ stage: 4 });
+    const update = {
+      id: 'U'.repeat(26),
+      idea_id: before.id,
+      note: 'edited',
+      stage_after: 4,
+      created_at: Date.now(),
+    };
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (_url, init: RequestInit | undefined) => {
+        if (init?.method === 'PATCH') {
+          return okJson(200, { idea: after, prev_stage: 4, update });
+        }
+        return okJson(200, [before]);
+      }),
+    );
+
+    const { result } = renderHook(() => useIdeas());
+    await waitFor(() => expect(result.current.status).toBe('ready'));
+
+    await act(async () => {
+      await result.current.editUpdate(before.id, update.id, { note: 'edited' });
+    });
+    expect(result.current.ideas).toEqual([after]);
+  });
+
+  it('deleteUpdate replaces the cached idea on success', async () => {
+    const before = buildIdea({ stage: 5 });
+    const after = buildIdea({ stage: 4 });
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (_url, init: RequestInit | undefined) => {
+        if (init?.method === 'DELETE') {
+          return okJson(200, { idea: after, prev_stage: 5 });
+        }
+        return okJson(200, [before]);
+      }),
+    );
+
+    const { result } = renderHook(() => useIdeas());
+    await waitFor(() => expect(result.current.status).toBe('ready'));
+
+    await act(async () => {
+      await result.current.deleteUpdate(before.id, 'U'.repeat(26));
+    });
+    expect(result.current.ideas).toEqual([after]);
+  });
+
+  it('editUpdate leaves the cache untouched on error', async () => {
+    const before = buildIdea({ stage: 4 });
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (_url, init: RequestInit | undefined) => {
+        if (init?.method === 'PATCH') {
+          return okJson(500, { error: 'internal_error' });
+        }
+        return okJson(200, [before]);
+      }),
+    );
+
+    const { result } = renderHook(() => useIdeas());
+    await waitFor(() => expect(result.current.status).toBe('ready'));
+
+    await act(async () => {
+      await expect(
+        result.current.editUpdate(before.id, 'U'.repeat(26), { note: 'x' }),
+      ).rejects.toThrow();
+    });
+    expect(result.current.ideas).toEqual([before]);
+  });
+});
+
+describe('useIdeas — deleteIdea (US5)', () => {
+  it('removes the idea from the cache on success', async () => {
+    const before = buildIdea();
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (_url, init: RequestInit | undefined) => {
+        if (init?.method === 'DELETE') {
+          return new Response(null, { status: 204 });
+        }
+        return okJson(200, [before]);
+      }),
+    );
+
+    const { result } = renderHook(() => useIdeas());
+    await waitFor(() => expect(result.current.status).toBe('ready'));
+    expect(result.current.ideas).toHaveLength(1);
+
+    await act(async () => {
+      await result.current.deleteIdea(before.id);
+    });
+    expect(result.current.ideas).toEqual([]);
+  });
+
+  it('leaves the cache untouched on a 500 error', async () => {
+    const before = buildIdea();
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (_url, init: RequestInit | undefined) => {
+        if (init?.method === 'DELETE') {
+          return okJson(500, { error: 'internal_error' });
+        }
+        return okJson(200, [before]);
+      }),
+    );
+
+    const { result } = renderHook(() => useIdeas());
+    await waitFor(() => expect(result.current.status).toBe('ready'));
+
+    await act(async () => {
+      await expect(result.current.deleteIdea(before.id)).rejects.toThrow();
+    });
+    expect(result.current.ideas).toEqual([before]);
+  });
+});

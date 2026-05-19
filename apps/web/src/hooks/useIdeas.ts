@@ -1,6 +1,22 @@
 import { useCallback, useEffect, useState } from 'react';
-import type { Idea, NewIdeaInput } from '@idea-garden/shared';
-import { ApiClientError, createIdea, listIdeas } from '../api/ideas.ts';
+import type {
+  EditIdeaInput,
+  EditIdeaUpdateInput,
+  Idea,
+  MutationResponse,
+  NewIdeaInput,
+  NewIdeaUpdateInput,
+} from '@idea-garden/shared';
+import {
+  ApiClientError,
+  addUpdate as apiAddUpdate,
+  createIdea as apiCreateIdea,
+  deleteIdea as apiDeleteIdea,
+  deleteUpdate as apiDeleteUpdate,
+  listIdeas,
+  patchIdea as apiPatchIdea,
+  patchUpdate as apiPatchUpdate,
+} from '../api/ideas.ts';
 
 export type UseIdeasState = {
   status: 'idle' | 'loading' | 'ready' | 'error';
@@ -11,6 +27,15 @@ export type UseIdeasState = {
 export type UseIdeasResult = UseIdeasState & {
   createIdea: (input: NewIdeaInput) => Promise<Idea>;
   refresh: () => Promise<void>;
+  addUpdate: (ideaId: string, input: NewIdeaUpdateInput) => Promise<MutationResponse>;
+  editIdea: (ideaId: string, input: EditIdeaInput) => Promise<MutationResponse>;
+  editUpdate: (
+    ideaId: string,
+    updateId: string,
+    input: EditIdeaUpdateInput,
+  ) => Promise<MutationResponse>;
+  deleteUpdate: (ideaId: string, updateId: string) => Promise<MutationResponse>;
+  deleteIdea: (ideaId: string) => Promise<void>;
 };
 
 const TEMP_ID_PREFIX = 'temp-';
@@ -53,22 +78,83 @@ export function useIdeas(): UseIdeasResult {
     const temp = makeTempIdea(input);
     setState((s) => ({ ...s, ideas: [temp, ...s.ideas], status: 'ready' }));
     try {
-      const created = await createIdea(input);
+      const created = await apiCreateIdea(input);
       setState((s) => ({
         ...s,
         ideas: s.ideas.map((i) => (i.id === temp.id ? created : i)),
       }));
       return created;
     } catch (err) {
-      // Roll back the optimistic prepend
       setState((s) => ({ ...s, ideas: s.ideas.filter((i) => i.id !== temp.id) }));
       throw err;
     }
+  }, []);
+
+  const addUpdate = useCallback(
+    async (ideaId: string, input: NewIdeaUpdateInput): Promise<MutationResponse> => {
+      const result = await apiAddUpdate(ideaId, input);
+      setState((s) => ({
+        ...s,
+        ideas: s.ideas.map((i) => (i.id === ideaId ? result.idea : i)),
+      }));
+      return result;
+    },
+    [],
+  );
+
+  const editIdea = useCallback(
+    async (ideaId: string, input: EditIdeaInput): Promise<MutationResponse> => {
+      const result = await apiPatchIdea(ideaId, input);
+      setState((s) => ({
+        ...s,
+        ideas: s.ideas.map((i) => (i.id === ideaId ? result.idea : i)),
+      }));
+      return result;
+    },
+    [],
+  );
+
+  const editUpdate = useCallback(
+    async (
+      ideaId: string,
+      updateId: string,
+      input: EditIdeaUpdateInput,
+    ): Promise<MutationResponse> => {
+      const result = await apiPatchUpdate(ideaId, updateId, input);
+      setState((s) => ({
+        ...s,
+        ideas: s.ideas.map((i) => (i.id === ideaId ? result.idea : i)),
+      }));
+      return result;
+    },
+    [],
+  );
+
+  const deleteUpdate = useCallback(
+    async (ideaId: string, updateId: string): Promise<MutationResponse> => {
+      const result = await apiDeleteUpdate(ideaId, updateId);
+      setState((s) => ({
+        ...s,
+        ideas: s.ideas.map((i) => (i.id === ideaId ? result.idea : i)),
+      }));
+      return result;
+    },
+    [],
+  );
+
+  const deleteIdea = useCallback(async (ideaId: string): Promise<void> => {
+    await apiDeleteIdea(ideaId);
+    setState((s) => ({ ...s, ideas: s.ideas.filter((i) => i.id !== ideaId) }));
   }, []);
 
   return {
     ...state,
     createIdea: create,
     refresh,
+    addUpdate,
+    editIdea,
+    editUpdate,
+    deleteUpdate,
+    deleteIdea,
   };
 }

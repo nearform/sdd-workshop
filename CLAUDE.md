@@ -1,5 +1,5 @@
 <!-- SPECKIT START -->
-Active feature plan: [specs/001-foundation-homepage/plan.md](specs/001-foundation-homepage/plan.md)
+Active feature plan: [specs/003-growth-loop/plan.md](specs/003-growth-loop/plan.md)
 
 For project-wide context (binding tech stack, conventions, hard rules) read
 [.specify/memory/constitution.md](.specify/memory/constitution.md), the

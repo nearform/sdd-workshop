@@ -8,19 +8,41 @@ type IdeaCardProps = {
   index?: number;
   /** Override "now" for deterministic relative-time rendering in tests. */
   now?: number;
+  /** Called when the card is activated (click or Enter/Space). */
+  onOpen?: (id: string) => void;
 };
 
 const MAX_STAGE = 16;
 
-export function IdeaCard({ idea, index, now }: IdeaCardProps) {
+export function IdeaCard({ idea, index, now, onOpen }: IdeaCardProps) {
   const reference = now ?? Date.now();
   const clampedStage = Math.max(0, Math.min(MAX_STAGE, idea.stage));
   const fillPct = (clampedStage / MAX_STAGE) * 100;
   const bloomed = idea.stage >= MAX_STAGE;
 
+  const handleActivate = () => {
+    if (onOpen) onOpen(idea.id);
+  };
+
+  const handleKey = (e: React.KeyboardEvent) => {
+    if (!onOpen) return;
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onOpen(idea.id);
+    }
+  };
+
+  const interactive = Boolean(onOpen);
+
   return (
     <article
-      className="idea-card group relative overflow-hidden bg-white border border-ink/15 rounded-lg p-lg flex flex-col gap-sm w-full max-w-sm justify-self-start hover:border-primary/60 hover:shadow-[0_18px_40px_-22px_rgba(31,42,34,0.35)]"
+      role={interactive ? 'button' : undefined}
+      tabIndex={interactive ? 0 : undefined}
+      onClick={interactive ? handleActivate : undefined}
+      onKeyDown={interactive ? handleKey : undefined}
+      className={`idea-card group relative overflow-hidden bg-white border border-ink/15 rounded-lg p-lg flex flex-col gap-sm w-full max-w-sm justify-self-start hover:border-primary/60 hover:shadow-[0_18px_40px_-22px_rgba(31,42,34,0.35)] ${
+        interactive ? 'cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/50' : ''
+      }`}
     >
       <div className="flex items-center justify-between mb-xs">
         {typeof index === 'number' ? (
