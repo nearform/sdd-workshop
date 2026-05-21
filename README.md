@@ -19,7 +19,7 @@ The same feature also lives on two reference branches showing contrasting approa
 | Branch | What it shows |
 |---|---|
 | `002-vibe-coded-implementation` | What you get when you describe the feature in a single high-level prompt and accept what comes back |
-| `003-sdd-growth-feature` | The full SDD version — **one commit per step in the loop** — so every phase is readable in git history |
+| `003-growth-loop` | The full SDD version — **one commit per step in the loop** — so every phase is readable in git history |
 
 At the end of the session, look at both. The difference is the point.
 
@@ -71,12 +71,27 @@ If at any point you get stuck — commands fail, the output looks wrong, or you 
 ### `002-vibe-coded-implementation`
 The vibe-coded version. One or two informal prompts, then accepting whatever the AI produced. Look at the git log, the test coverage (or lack of it), and what happens when you try the edge cases.
 
-### `003-sdd-growth-feature`
-The SDD version. **Each commit maps to exactly one main step in the loop** — spec, plan, tasks, implement. If you're stuck on Step 4, you can check out that commit and start from there. It's also the reference for what a well-executed output looks like at each phase.
+### `003-growth-loop`
+The SDD version. **Each commit maps to exactly one main step in the loop** — spec, plan, tasks, implement. If you're stuck on a step, you can check out its tag and start from there. It's also the reference for what a well-executed output looks like at each phase.
+
+Each step is tagged so you can jump straight to any phase:
+
+| Tag | What it contains |
+|---|---|
+| `step-2-specify` | After `/speckit-specify` — `spec.md` written |
+| `step-3-plan` | After `/speckit-plan` — `plan.md` written |
+| `step-4-tasks` | After `/speckit-tasks` — `tasks.md` written |
+| `step-5-implement` | After `/speckit-implement` — full implementation |
 
 ```bash
 # See the SDD loop told in git history
-git log --oneline origin/003-sdd-growth-feature
+git log --oneline origin/003-growth-loop
+
+# Jump to any phase directly
+git checkout step-2-specify
+git checkout step-3-plan
+git checkout step-4-tasks
+git checkout step-5-implement
 ```
 
 ### Your working branch
@@ -314,11 +329,11 @@ The agent reads spec, plan, and tasks — then writes the code. It works task by
 
 **If the agent gets stuck in a loop on the same failing test**: Interrupt it. Read the error message yourself and point it to the right fix — often it's a missing import, a wrong file path, or a test assertion that needs updating.
 
-**If you run out of time**: That's fine. Check out `origin/003-sdd-growth-feature` to see the finished implementation. The value of the workshop isn't finishing — it's experiencing the loop up to this point.
+**If you run out of time**: That's fine. Check out the finished implementation tag to see what a complete run looks like. The value of the workshop isn't finishing — it's experiencing the loop up to this point.
 
 ```bash
 # See the finished SDD implementation
-git checkout origin/003-sdd-growth-feature -- .
+git checkout step-5-implement
 ```
 
 
@@ -369,8 +384,11 @@ npm run dev          # http://localhost:5173
 # 4. Reset database
 rm -f data/garden.db
 
-# 5. See the finished SDD reference
-git log --oneline origin/003-sdd-growth-feature
+# 5. See the SDD reference steps
+git checkout step-2-specify     # after specify
+git checkout step-3-plan        # after plan
+git checkout step-4-tasks       # after tasks
+git checkout step-5-implement   # finished implementation
 
 # 6. See the vibe-coded reference
 git checkout origin/002-vibe-coded-implementation -- .
