@@ -41,10 +41,10 @@ The economics are straightforwardly favorable. A spec that takes 20–30 minutes
 
 | Phase | Command | Artifact produced |
 |---|---|---|
-| **Specify** | `/speckit.specify` | `spec.md` — the *what*: goal, constraints, acceptance criteria |
-| **Plan** | `/speckit.plan` | `plan.md` — the *how*: technical approach, trade-offs, sequencing |
-| **Tasks** | `/speckit.tasks` | `tasks.md` — dependency-ordered checklist with explicit done checks |
-| **Implement** | `/speckit.implement` | Code — guided by the spec, plan, and task list |
+| **Specify** | `/speckit-specify` | `spec.md` — the *what*: goal, constraints, acceptance criteria |
+| **Plan** | `/speckit-plan` | `plan.md` — the *how*: technical approach, trade-offs, sequencing |
+| **Tasks** | `/speckit-tasks` | `tasks.md` — dependency-ordered checklist with explicit done checks |
+| **Implement** | `/speckit-implement` | Code — guided by the spec, plan, and task list |
 
 Human review happens at the seams between phases, not inside them. Catching a misalignment in the spec costs 5 minutes. Catching it in code review costs an hour. Catching it in production costs more.
 
@@ -52,7 +52,7 @@ Human review happens at the seams between phases, not inside them. Catching a mi
 
 ## What We'll Build Today
 
-The feature you'll specify and implement is called the **Growth Loop**. Here's the full description — this is also the prompt you'll paste into `/speckit.specify` in Step 2:
+The feature you'll specify and implement is called the **Growth Loop**. Here's the full description — this is also the prompt you'll paste into `/speckit-specify` in Step 2:
 
 > *Clicking an idea card opens a detail modal. The modal shows the idea's title, description, current plant image at its current stage, a level indicator, and a chronological timeline of all past "waterings" (newest first). Each timeline entry shows the update note and a relative timestamp. If no waterings exist yet, the timeline shows an empty state. The modal is closeable via an X button, the Escape key, or clicking the backdrop.*
 >
@@ -78,10 +78,10 @@ Each step is tagged so you can jump straight to any phase:
 
 | Tag | What it contains |
 |---|---|
-| `step-2-specify` | After `/speckit.specify` — `spec.md` written |
-| `step-3-plan` | After `/speckit.plan` — `plan.md` written |
-| `step-4-tasks` | After `/speckit.tasks` — `tasks.md` written |
-| `step-5-implement` | After `/speckit.implement` — full implementation |
+| `step-2-specify` | After `/speckit-specify` — `spec.md` written |
+| `step-3-plan` | After `/speckit-plan` — `plan.md` written |
+| `step-4-tasks` | After `/speckit-tasks` — `tasks.md` written |
+| `step-5-implement` | After `/speckit-implement` — full implementation |
 
 ```bash
 # See the SDD loop told in git history
@@ -95,7 +95,7 @@ git checkout step-5-implement
 ```
 
 ### Your working branch
-SpecKit auto-creates this when you run `/speckit.specify`. It will be named something like `004-growth-loop`. This is where your own SDD work lands.
+SpecKit auto-creates this when you run `/speckit-specify`. It will be named something like `004-growth-loop`. This is where your own SDD work lands.
 
 ---
 
@@ -106,10 +106,10 @@ SpecKit auto-creates this when you run `/speckit.specify`. It will be named some
 You'll use these four commands today:
 
 ```
-/speckit.specify    →  generates spec.md
-/speckit.plan       →  generates plan.md
-/speckit.tasks      →  generates tasks.md
-/speckit.implement  →  writes the code
+/speckit-specify    →  generates spec.md
+/speckit-plan       →  generates plan.md
+/speckit-tasks      →  generates tasks.md
+/speckit-implement  →  writes the code
 ```
 
 SpecKit works with any AI assistant that supports slash commands: Claude Code, Copilot, Cursor, Windsurf, or similar. Installing it is an interactive step — the SpecKit CLI asks which coding agent you're using and wires the slash commands into the right place for that tool. See **Step 0** below for the install commands.
@@ -128,7 +128,7 @@ A [Playwright](https://playwright.dev/) MCP server is configured in this project
 - **Take screenshots** so the agent can see the current UI state and catch visual regressions after its own changes
 - **Assert UI behavior** end-to-end — filling forms, clicking buttons, checking that animations complete — rather than relying purely on unit tests
 
-This is particularly useful during `/speckit.implement`: instead of trusting that "the code looks right", the agent can open the browser, exercise the feature, and confirm the acceptance criteria are met visually.
+This is particularly useful during `/speckit-implement`: instead of trusting that "the code looks right", the agent can open the browser, exercise the feature, and confirm the acceptance criteria are met visually.
 
 ### Agent Skills
 
@@ -200,7 +200,7 @@ uv tool install specify-cli --from git+https://github.com/github/spec-kit.git@v0
 specify init .
 ```
 
-`specify init` is interactive — it asks which coding agent you're using and drops the `/speckit.*` slash commands into the right place for that tool. Full docs: [github.com/github/spec-kit](https://github.com/github/spec-kit).
+`specify init` is interactive — it asks which coding agent you're using and drops the `/speckit-*` slash commands into the right place for that tool. Full docs: [github.com/github/spec-kit](https://github.com/github/spec-kit).
 
 **2. Install the agent skills**
 
@@ -226,7 +226,7 @@ git checkout master
 git pull origin master          # make sure you have the latest
 ```
 
-> **Don't create a branch manually.** `/speckit.specify` will automatically create a feature branch for you (via a `before_specify` hook).
+> **Don't create a branch manually.** `/speckit-specify` will automatically create a feature branch for you (via a `before_specify` hook).
 
 ---
 
@@ -234,12 +234,12 @@ git pull origin master          # make sure you have the latest
 
 🔄 **Start a fresh AI session for this step.**
 
-This is where you write the spec. `/speckit.specify` takes your feature description, makes informed guesses for anything unspecified, and writes `spec.md` directly — no upfront interview. If it hits something genuinely ambiguous with no reasonable default, it may pause and ask you up to 3 targeted clarifying questions (presented as a structured table with options); most of the time with a detailed description like the one below, it writes the spec without stopping.
+This is where you write the spec. `/speckit-specify` takes your feature description, makes informed guesses for anything unspecified, and writes `spec.md` directly — no upfront interview. If it hits something genuinely ambiguous with no reasonable default, it may pause and ask you up to 3 targeted clarifying questions (presented as a structured table with options); most of the time with a detailed description like the one below, it writes the spec without stopping.
 
 **Paste this into your AI assistant:**
 
 ```
-/speckit.specify Clicking an idea card opens a detail modal. The modal shows the idea's title, description, current plant image at its current stage, a level indicator, and a chronological timeline of all past "waterings" (newest first). Each timeline entry shows the update note and a relative timestamp. If no waterings exist yet, the timeline shows an empty state. The modal is closeable via an X button, the Escape key, or clicking the backdrop.
+/speckit-specify Clicking an idea card opens a detail modal. The modal shows the idea's title, description, current plant image at its current stage, a level indicator, and a chronological timeline of all past "waterings" (newest first). Each timeline entry shows the update note and a relative timestamp. If no waterings exist yet, the timeline shows an empty state. The modal is closeable via an X button, the Escape key, or clicking the backdrop.
 
 From the modal, the user can water the idea by submitting an update note (required, non-empty). On submit, the app waits for the server response, then plays a Three.js growth animation — a particle burst / level-unlock effect — after which the plant image swaps to the next stage and the level indicator updates. Each watering increments the stage by 1, capped at 16. An idea already at stage 16 can still be watered: the animation plays a "bloom" celebration variant, but the image and stage stay at 16. The user can also edit the idea's title and description from the modal (inline edit mode, decoupled from the growth system — saving an edit does not advance the stage or trigger an animation). Individual past updates can be deleted from the timeline. The idea itself can be deleted entirely, which closes the modal and removes the card from the grid.
 
@@ -279,10 +279,10 @@ Two special transitions trigger a page-wide confetti burst: the first watering o
 ### Step 3: Plan — Generate `plan.md`
 
 ```
-/speckit.plan
+/speckit-plan
 ```
 
-> **How the agent knows which spec to use**: when `/speckit.specify` ran, it wrote the active feature path to `.specify/feature.json`. Every subsequent command (`/speckit.plan`, `/speckit.tasks`, `/speckit.implement`) reads that file automatically — you don't need to pass the spec path. If for any reason auto-detection fails, the fallback is your branch name prefix (e.g. `004-growth-loop` → `specs/004-growth-loop/`).
+> **How the agent knows which spec to use**: when `/speckit-specify` ran, it wrote the active feature path to `.specify/feature.json`. Every subsequent command (`/speckit-plan`, `/speckit-tasks`, `/speckit-implement`) reads that file automatically — you don't need to pass the spec path. If for any reason auto-detection fails, the fallback is your branch name prefix (e.g. `004-growth-loop` → `specs/004-growth-loop/`).
 
 The agent reads `spec.md` and explores the existing codebase — file structure, existing endpoints, shared types, test setup — then produces a technical plan: which files to change, which patterns to follow, what trade-offs were considered, and in what order to implement things.
 
@@ -317,7 +317,7 @@ The agent reads `spec.md` and explores the existing codebase — file structure,
 ### Step 4: Tasks — Generate `tasks.md`
 
 ```
-/speckit.tasks
+/speckit-tasks
 ```
 
 The agent breaks the plan into individually executable, independently verifiable tasks. Each task has an explicit **done check** — a concrete, testable condition that tells you (and the agent) when it's complete.
@@ -329,7 +329,7 @@ The agent breaks the plan into individually executable, independently verifiable
 > [!IMPORTANT]
 > ### 🛑 Mandatory review before continuing
 >
-> **Read through `tasks.md` before handing it to the implementation agent.** Once `/speckit.implement` starts, it will follow these tasks literally. Ask yourself:
+> **Read through `tasks.md` before handing it to the implementation agent.** Once `/speckit-implement` starts, it will follow these tasks literally. Ask yourself:
 > - Are there "mega-tasks"? If a done check uses the word "and" three or more times, the task should be split.
 > - Does the ordering reflect real dependencies? (You can't write a frontend form for an endpoint that doesn't exist yet.)
 > - Is every done check concrete and testable — something you could verify yourself?
@@ -349,7 +349,7 @@ The agent breaks the plan into individually executable, independently verifiable
 ### Step 5: Implement — `speckit-implement`
 
 ```
-/speckit.implement
+/speckit-implement
 ```
 
 The agent reads spec, plan, and tasks — then writes the code. It works task by task, checking off each done check as it goes.
@@ -390,7 +390,7 @@ git checkout step-5-implement
 - If the output is very wrong, try re-running the command with more context: add a sentence or two about what the existing code already handles
 - Check that `master` has `.specify/memory/constitution.md`, `PRD.md`, and `design.md` — SpecKit relies on these for context
 
-**`/speckit.implement` gets stuck or loops**
+**`/speckit-implement` gets stuck or loops**
 - Interrupt the agent (Ctrl-C or your tool's stop gesture)
 - Read the error message and give the agent a specific nudge: *"The failing test is in apps/server — the endpoint returns 200 but the test expects 201"*
 - If a task has been failing for 3+ iterations, check out the equivalent commit on `003-sdd-growth-feature` to see how it was resolved there
@@ -405,17 +405,17 @@ git checkout step-5-implement
 ## Quick Reference
 
 ```bash
-# 1. Setup (branch is auto-created by /speckit.specify)
+# 1. Setup (branch is auto-created by /speckit-specify)
 git checkout master && git pull origin master
 
 # 2. Run the app
 npm run dev          # http://localhost:5173
 
 # 3. The SDD loop (one fresh session per step)
-/speckit.specify <prompt>
-/speckit.plan
-/speckit.tasks
-/speckit.implement
+/speckit-specify <prompt>
+/speckit-plan
+/speckit-tasks
+/speckit-implement
 
 # 4. Reset database
 npm run clean

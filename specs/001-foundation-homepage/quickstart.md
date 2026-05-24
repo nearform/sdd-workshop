@@ -95,7 +95,7 @@ The web app reads `VITE_API_BASE_URL` (default `http://localhost:3000`) for fetc
 
 ## Manual verification — acceptance criteria
 
-The Vitest suites cover most of the spec's acceptance scenarios in isolation. The following checks are **end-to-end**, exercising the running app in a browser. The `/speckit.implement` step runs them via Playwright MCP; this list mirrors what a human reviewer would walk through.
+The Vitest suites cover most of the spec's acceptance scenarios in isolation. The following checks are **end-to-end**, exercising the running app in a browser. The `/speckit-implement` step runs them via Playwright MCP; this list mirrors what a human reviewer would walk through.
 
 ### From PRD §1.6 / spec.md
 

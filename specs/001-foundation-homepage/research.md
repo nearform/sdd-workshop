@@ -127,7 +127,7 @@ This document captures the decisions taken to resolve the open questions left by
 
 ## R10. Browser-driving capability for the agent
 
-**Decision**: **Playwright MCP** (the constitution's documented default) is the agent's hands during `/speckit.implement`. The implementation plan assumes it is reachable; if it is not, the gap is called out in the PR description per Constitution Principle II.
+**Decision**: **Playwright MCP** (the constitution's documented default) is the agent's hands during `/speckit-implement`. The implementation plan assumes it is reachable; if it is not, the gap is called out in the PR description per Constitution Principle II.
 
 **Rationale**:
 - Constitution Principle II requires browser-driving capability for the agent and names Playwright MCP as the default.
@@ -179,4 +179,4 @@ This document captures the decisions taken to resolve the open questions left by
 
 **None.** Every NEEDS CLARIFICATION raised by the technical context has a concrete decision above. The plan can proceed to Phase 1 without further input from the user.
 
-The four open questions in [PRD §7](../../.specify/memory/PRD.md#7-open-questions) that touch Step 2 (animation library, empty-note updates, stage-16 cap visibility, and the species-from-hash alternative) are deliberately left for the SDD branch's `/speckit.clarify` round.
+The four open questions in [PRD §7](../../.specify/memory/PRD.md#7-open-questions) that touch Step 2 (animation library, empty-note updates, stage-16 cap visibility, and the species-from-hash alternative) are deliberately left for the SDD branch's `/speckit-clarify` round.

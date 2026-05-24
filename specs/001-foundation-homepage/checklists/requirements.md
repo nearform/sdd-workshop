@@ -37,4 +37,4 @@
 - **Requirement Completeness — clarifications**: The PRD's Step 1 scope is well-defined; the only PRD §7 open questions that touch Step 1 (species assignment) have a documented default that this spec adopts in Assumptions. No `[NEEDS CLARIFICATION]` markers needed under the "max-3, only when no reasonable default exists" rule.
 - **Success criteria — technology-agnostic**: All eight SCs are framed in user-perceived metrics (time to first idea, render time on a class of laptop, percentages of failure surfacing, attendee reading time). No SC names a framework, language, library, or API.
 - **Scope boundary**: The "Out of scope" subsection lists Step 2 features and stretch goals explicitly so reviewers can spot scope creep on the first pass.
-- **Items marked incomplete require spec updates before `/speckit.clarify` or `/speckit.plan`** — none currently incomplete.
+- **Items marked incomplete require spec updates before `/speckit-clarify` or `/speckit-plan`** — none currently incomplete.

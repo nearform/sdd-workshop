@@ -11,7 +11,7 @@ This PRD is also the backbone of a **workshop on Spec-Driven Development (SDD)**
 - **Step 1 — Foundation (built with SDD).** The repo setup, idea creation, and listing are built using the full SDD workflow. This is the baseline: it lives on `master` and gives the audience their first taste of the SDD loop on a small, well-bounded scope.
 - **Step 2 — The Growth Loop, built twice.** The headline feature (clicking an idea, adding updates, the Three.js animation, stage progression) is built **twice from `master`**, on two parallel branches:
   - `feature/growth-loop-vibe` — vibe-coded: prompt the model, accept diffs, ship.
-  - `feature/growth-loop-sdd` — full SDD workflow, with each commit corresponding to a step in the loop (`/speckit.specify`, `/speckit.clarify`, `/speckit.plan`, `/speckit.tasks`, `/speckit.analyze`, `/speckit.implement`).
+  - `feature/growth-loop-sdd` — full SDD workflow, with each commit corresponding to a step in the loop (`/speckit-specify`, `/speckit-clarify`, `/speckit-plan`, `/speckit-tasks`, `/speckit-analyze`, `/speckit-implement`).
 
   The two branches are then compared side-by-side to surface the differences in quality, predictability, and cost.
 
@@ -121,7 +121,7 @@ Sidebar filters and the "Today's Focus" widget are **stretch goals** — Step 1 
 
 # Step 1 — Foundation (Built with SDD on `master`)
 
-> **Workshop framing:** Step 1 is the audience's **first exposure to the SDD loop**. The presenter walks through `/speckit.specify` → `/speckit.clarify` → `/speckit.plan` → `/speckit.tasks` → `/speckit.analyze` → `/speckit.implement` on a deliberately small scope, so the mechanics are visible without the audience drowning in domain complexity. The output lands on `master` and becomes the shared starting point for both Step 2 branches.
+> **Workshop framing:** Step 1 is the audience's **first exposure to the SDD loop**. The presenter walks through `/speckit-specify` → `/speckit-clarify` → `/speckit-plan` → `/speckit-tasks` → `/speckit-analyze` → `/speckit-implement` on a deliberately small scope, so the mechanics are visible without the audience drowning in domain complexity. The output lands on `master` and becomes the shared starting point for both Step 2 branches.
 
 ## 1.1 Scope
 
@@ -357,19 +357,19 @@ This section describes how Step 2 is **delivered in the workshop**, which is the
 
   | Commit | Phase | Artifact produced |
   |---|---|---|
-  | 1 | `/speckit.specify` | `specs/growth-loop/spec.md` — the *what* |
-  | 2 | `/speckit.clarify` | resolved ambiguities folded back into `spec.md` |
-  | 3 | `/speckit.plan` | `specs/growth-loop/plan.md` — the *how* |
-  | 4 | `/speckit.tasks` | `specs/growth-loop/tasks.md` — dependency-ordered checklist |
-  | 5 | `/speckit.analyze` | cross-artifact consistency report; fixes applied |
-  | 6+ | `/speckit.implement` | code, tests — possibly one commit per task group |
+  | 1 | `/speckit-specify` | `specs/growth-loop/spec.md` — the *what* |
+  | 2 | `/speckit-clarify` | resolved ambiguities folded back into `spec.md` |
+  | 3 | `/speckit-plan` | `specs/growth-loop/plan.md` — the *how* |
+  | 4 | `/speckit-tasks` | `specs/growth-loop/tasks.md` — dependency-ordered checklist |
+  | 5 | `/speckit-analyze` | cross-artifact consistency report; fixes applied |
+  | 6+ | `/speckit-implement` | code, tests — possibly one commit per task group |
 
   This way `git log feature/growth-loop-sdd` reads as a narrative of the SDD loop, and any commit can be checked out to show the audience exactly what was on the page at that moment.
 
 **What the audience watches for:**
 - Up-front cost (the spec/plan/tasks pass takes longer before any code exists).
 - Hand-off quality: a different person — or a different agent — could pick up the tasks list and run with it.
-- Edge cases: are they caught in `/speckit.clarify` rather than in production?
+- Edge cases: are they caught in `/speckit-clarify` rather than in production?
 - Final code: is it more boring, more predictable, easier to review?
 
 ## W.3 Side-by-side comparison
@@ -396,7 +396,7 @@ After both branches exist, the presenter walks through:
 - **Empty-note updates:** allowed or not? *Default: not allowed; an update must say something.*
 - **Stage 16 cap visible to the user?** *Default: yes — show "Fully bloomed" in the modal, but updates still post.*
 
-These are **resolved during `/speckit.clarify`** in Round 2 of the workshop, deliberately leaving them open here so the SDD pass has something real to chew on.
+These are **resolved during `/speckit-clarify`** in Round 2 of the workshop, deliberately leaving them open here so the SDD pass has something real to chew on.
 
 ---
 
