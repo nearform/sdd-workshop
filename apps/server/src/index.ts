@@ -1,7 +1,7 @@
 import { buildApp } from './app.ts';
 import { openDb } from './db.ts';
 
-const port = Number(process.env.PORT ?? 3000);
+const port = Number(process.env.PORT ?? 4123);
 // Default to the IPv6 dual-stack wildcard so the server accepts both
 // `http://[::1]:PORT` and `http://127.0.0.1:PORT`. Browsers resolve
 // `localhost` to `::1` first via Happy Eyeballs; an IPv4-only bind
@@ -29,12 +29,10 @@ try {
   app.log.info({ url }, 'idea-garden server listening');
 } catch (err) {
   if (err instanceof Error && 'code' in err && err.code === 'EADDRINUSE') {
-    // Common case: another dev server (often Next.js) holds port 3000. Help
-    // the user fix it without spelunking through stack traces.
     process.stderr.write(
       `\nidea-garden server: port ${port} is already in use.\n` +
         `Free the port (try: lsof -i :${port}) or pick another:\n` +
-        `  PORT=3030 VITE_API_BASE_URL=http://localhost:3030 npm run dev\n\n`,
+        `  PORT=4124 VITE_API_BASE_URL=http://localhost:4124 npm run dev\n\n`,
     );
   } else {
     app.log.error(err, 'failed to start server');

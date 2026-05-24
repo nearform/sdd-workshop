@@ -95,7 +95,7 @@ git checkout step-5-implement
 ```
 
 ### Your working branch
-SpecKit auto-creates this when you run `/speckit-specify`. It will be named something like `004-growth-loop`. This is where your own SDD work lands.
+SpecKit auto-creates this when you run `/speckit-specify`. The name will look something like `002-growth-loop` — SpecKit increments the number from the highest existing spec directory on `master` (currently just `001-foundation-homepage`), and the slug after the number is chosen by the agent based on your feature description. The exact name you see may differ slightly, and that's fine. This is where your own SDD work lands.
 
 ---
 
@@ -150,7 +150,7 @@ Before diving into the SDD loop, take a minute to see what you're building on to
 ```bash
 # From the repo root
 npm install          # install all workspaces (if not already done)
-npm run dev          # starts server (port 3000) + frontend (port 5173)
+npm run dev          # starts server (port 4123) + frontend (port 5173)
 ```
 
 Open [http://localhost:5173](http://localhost:5173). You should see the Idea Garden with a grid of cards (or an empty-state CTA if the database is fresh).
@@ -246,7 +246,7 @@ From the modal, the user can water the idea by submitting an update note (requir
 Two special transitions trigger a page-wide confetti burst: the first watering on a brand-new idea (Level 1 → 2), and the watering that takes an idea to full bloom (Level 15 → 16). All other intermediate waterings play the growth animation alone, with no confetti. The bloom confetti uses a larger, more festive palette; the first-watering confetti is smaller and uses green and gold. Implement the confetti as an in-house canvas component — no third-party confetti library.
 ```
 
-**What to expect**: The AI generates the spec immediately. It will write the spec to `specs/004-growth-loop/spec.md` (the number is auto-incremented from existing directories — `001` and `003` already exist on `master`).
+**What to expect**: The AI generates the spec immediately. It will write the spec to something like `specs/002-growth-loop/spec.md` — SpecKit auto-increments the number from existing directories on `master` (currently just `001-foundation-homepage`), and the agent picks the slug from your feature description. The exact folder name you end up with may differ; look in `specs/` to see what was actually created.
 
 **What a good spec.md contains:**
 - User scenarios with acceptance criteria (organized by priority)
@@ -282,7 +282,7 @@ Two special transitions trigger a page-wide confetti burst: the first watering o
 /speckit-plan
 ```
 
-> **How the agent knows which spec to use**: when `/speckit-specify` ran, it wrote the active feature path to `.specify/feature.json`. Every subsequent command (`/speckit-plan`, `/speckit-tasks`, `/speckit-implement`) reads that file automatically — you don't need to pass the spec path. If for any reason auto-detection fails, the fallback is your branch name prefix (e.g. `004-growth-loop` → `specs/004-growth-loop/`).
+> **How the agent knows which spec to use**: when `/speckit-specify` ran, it wrote the active feature path to `.specify/feature.json`. Every subsequent command (`/speckit-plan`, `/speckit-tasks`, `/speckit-implement`) reads that file automatically — you don't need to pass the spec path. If for any reason auto-detection fails, the fallback is your branch name prefix (e.g. `002-growth-loop` → `specs/002-growth-loop/`).
 
 The agent reads `spec.md` and explores the existing codebase — file structure, existing endpoints, shared types, test setup — then produces a technical plan: which files to change, which patterns to follow, what trade-offs were considered, and in what order to implement things.
 
@@ -378,7 +378,10 @@ git checkout step-5-implement
 **`npm run dev` fails**
 - Check Node version: `node --version` — must be 22.6+
 - Try `npm install` from the repo root if `node_modules` is missing or stale
-- Port conflicts: Fastify defaults to 3000, Vite to 5173. If something is already on those ports, kill the existing process first.
+- Port conflicts: Fastify defaults to 4123, Vite to 5173. If either is already taken, override with env vars instead of killing whatever else is running:
+  ```
+  PORT=4124 VITE_API_BASE_URL=http://localhost:4124 npm run dev
+  ```
 
 **SpecKit commands not found**
 - Verify SpecKit is installed: run `/help` in your AI assistant and look for speckit commands in the list
