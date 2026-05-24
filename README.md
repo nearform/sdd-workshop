@@ -223,6 +223,7 @@ Two special transitions trigger a page-wide confetti burst: the first watering o
 
 **If the command doesn't run**: Check that SpecKit is installed correctly for your AI Assistant of choice.
 
+> [!IMPORTANT]
 > ### 🛑 Mandatory review before continuing
 >
 > **Open `spec.md` and read it in full.** This is the only phase where you can catch a misalignment for free — before any code or technical decisions exist. Ask yourself:
@@ -260,6 +261,7 @@ The agent reads `spec.md` and explores the existing codebase — file structure,
 
 **If the plan references files that don't exist**: That's a sign the agent misread the codebase. Point it to the correct structure in the same session: *"The server entry is at apps/server/src/index.ts, not src/server.ts."*
 
+> [!IMPORTANT]
 > ### 🛑 Mandatory review before continuing
 >
 > **Open `plan.md` and read it before moving on.** This is still words on a page — the cheapest correction point after the spec. Ask yourself:
@@ -291,6 +293,7 @@ The agent breaks the plan into individually executable, independently verifiable
 
 **If tasks seem too large or vague**: Ask the agent in the same session to split a specific task or to make a done check more concrete.
 
+> [!IMPORTANT]
 > ### 🛑 Mandatory review before continuing
 >
 > **Read through `tasks.md` before handing it to the implementation agent.** Once `/speckit-implement` starts, it will follow these tasks literally. Ask yourself:
