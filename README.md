@@ -174,11 +174,13 @@ rm -f data/garden.db   # the server recreates the schema on next boot
 
 Before starting, confirm you have:
 
-- [ ] Node.js 22.6+ (`node --version`)
+- [ ] **Node.js 22.6 or newer** (`node --version`). The server uses `--experimental-strip-types` to run TypeScript without a build step, which requires Node 22.6+. Anything older will fail to boot.
 - [ ] Repo cloned locally
 - [ ] `npm install` run from the repo root
 - [ ] Your AI assistant of choice running (Claude Code, Copilot, Cursor, Windsurf, etc.)
 - [ ] `npm run dev` works and the app opens at localhost:5173
+
+> **Using nvm?** The repo ships an [`.nvmrc`](.nvmrc) pinned to `lts/*`, so from the repo root you can just run `nvm use` (or `nvm install` if you don't have an LTS version yet) to land on a compatible Node — the current LTS comfortably satisfies the 22.6+ requirement.
 
 Then install the two pieces of tooling the workshop relies on. Both installers are **interactive** and will ask which coding agent you're using — pick the one you'll be working with for the session.
 
