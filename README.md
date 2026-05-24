@@ -112,9 +112,7 @@ You'll use these four commands today:
 /speckit-implement  →  writes the code
 ```
 
-SpecKit works with any AI assistant that supports slash commands: Claude Code, Copilot, Cursor, Windsurf, or similar.
-
-> **If SpecKit isn't installed yet**: follow the installation instructions at [github.com/github/spec-kit](https://github.com/github/spec-kit).
+SpecKit works with any AI assistant that supports slash commands: Claude Code, Copilot, Cursor, Windsurf, or similar. Installing it is an interactive step — the SpecKit CLI asks which coding agent you're using and wires the slash commands into the right place for that tool. See **Step 0** below for the install commands.
 
 ---
 
@@ -141,7 +139,7 @@ The environment also ships with two skill packs the agent can call as slash comm
 | **`threejs-*` skills** | A skill pack for Three.js work — geometry, shaders, lighting, animation, post-processing, loaders, and interaction. When the agent needs to write or refine the growth animation, these skills provide deep Three.js context so the output follows best practices rather than pattern-matched guesses. |
 | **`frontend-design`** | An Anthropic-authored skill for UI and frontend design decisions — layout, spacing, component structure, accessibility, and visual polish. Useful when you want the agent to reason carefully about how something should look and feel, not just whether it compiles. |
 
-These skills are available automatically — you don't need to install anything extra. The agent will invoke them when it recognises a matching task.
+These skills are **not bundled in the repo** — pre-installing them for a specific agent would break the workshop for anyone using a different tool. You install them yourself in Step 0, and the installer asks which coding agent to target. Once installed, the agent will invoke them automatically when it recognises a matching task.
 
 ---
 
@@ -179,8 +177,41 @@ Before starting, confirm you have:
 - [ ] Node.js 22.6+ (`node --version`)
 - [ ] Repo cloned locally
 - [ ] `npm install` run from the repo root
-- [ ] SpecKit installed and your AI assistant running
+- [ ] Your AI assistant of choice running (Claude Code, Copilot, Cursor, Windsurf, etc.)
 - [ ] `npm run dev` works and the app opens at localhost:5173
+
+Then install the two pieces of tooling the workshop relies on. Both installers are **interactive** and will ask which coding agent you're using — pick the one you'll be working with for the session.
+
+**1. Install SpecKit**
+
+Before installing, **check that SpecKit supports your AI agent** — see the official compatibility matrix at [github.github.io/spec-kit/reference/integrations.html](https://github.github.io/spec-kit/reference/integrations.html). If your agent isn't on the list, you'll need to switch to a supported one for the workshop.
+
+SpecKit is distributed as a Python CLI installed via [`uv`](https://docs.astral.sh/uv/). You'll need `uv` (and the Python toolchain it manages) available on your machine — see the [uv install guide](https://docs.astral.sh/uv/getting-started/installation/) if you don't have it yet.
+
+Then install the `specify` CLI and initialise it inside this repo:
+
+```bash
+# Install the CLI globally as a uv tool
+uv tool install specify-cli --from git+https://github.com/github/spec-kit.git@v0.8.13
+
+# From the repo root, wire SpecKit into this project
+specify init .
+```
+
+`specify init` is interactive — it asks which coding agent you're using and drops the `/speckit-*` slash commands into the right place for that tool. Full docs: [github.com/github/spec-kit](https://github.com/github/spec-kit).
+
+**2. Install the agent skills**
+
+The workshop also uses the `threejs-*` skill pack and Anthropic's `frontend-design` skill (see [Agent Skills](#agent-skills) below for what they do). They're **not pre-installed in this repo** because pre-installing them would bind the workshop to one specific agent.
+
+```bash
+npx skills add https://github.com/anthropics/skills --skill frontend-design
+npx skills add https://github.com/cloudai-x/threejs-skills
+```
+
+When the installer asks which coding agent to configure, pick the same one you chose for SpecKit.
+
+> **Why install instead of bundle?** Different agents read skills from different places (`.claude/skills`, Cursor rules, Copilot instructions, etc.). A pre-committed `.claude/` folder would silently do nothing for anyone using Cursor, and vice versa. Letting each participant install for their own agent keeps the workshop tool-agnostic.
 
 ---
 
