@@ -3,7 +3,7 @@
 **Branch**: `001-foundation-homepage` | **Date**: 2026-05-09 | **Spec**: [spec.md](./spec.md)
 **Input**: Feature specification from `/specs/001-foundation-homepage/spec.md`
 
-**Note**: This template is filled in by the `/speckit-plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
+**Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
 
 ## Summary
 
@@ -21,7 +21,7 @@ The plan deliberately defers anything that belongs to Step 2 — modal-based ide
 - Test: `vitest`, `@testing-library/react`, `@testing-library/jest-dom`, `@testing-library/user-event`, `jsdom`, `supertest` (or Fastify's `inject`) for API contract tests.
 - Tooling: `concurrently` (or `npm-run-all`) to fan out the dev script; `typescript` (only for the web app's `tsc --noEmit` typecheck and editor support); `@types/better-sqlite3`, `@types/node`.
 **Storage**: SQLite file at `data/garden.db` (gitignored). Schema is created on server boot if absent; no migration tooling.
-**Testing**: Vitest everywhere. Backend uses Fastify's in-process `app.inject(...)` for contract tests over a per-test SQLite file. Frontend uses Vitest + React Testing Library + jsdom. Playwright MCP (or equivalent browser-driving capability) is the agent's "hands" during `/speckit-implement` to self-verify the UX acceptance criteria from spec.md.
+**Testing**: Vitest everywhere. Backend uses Fastify's in-process `app.inject(...)` for contract tests over a per-test SQLite file. Frontend uses Vitest + React Testing Library + jsdom. Playwright MCP (or equivalent browser-driving capability) is the agent's "hands" during `/speckit.implement` to self-verify the UX acceptance criteria from spec.md.
 **Target Platform**: Modern Chromium-class browsers (latest Chrome / Edge / Firefox) on macOS or Linux laptops. No mobile support beyond "doesn't break".
 **Project Type**: **Web monorepo** with three workspaces — `apps/web`, `apps/server`, `packages/shared` — orchestrated by **npm workspaces** (no Turborepo, no Nx).
 **Performance Goals**: Homepage initial render under 1s with 200 ideas (SC-006); interactive within 30s of opening the app (SC-001); cold dev start under 2 minutes from clone (SC-002). The 60fps animation budget belongs to Step 2 and is out of scope here.
@@ -54,7 +54,7 @@ The relevant principles for this feature are I, II, III, IV, plus the Tech-Stack
 | Bug-hunt edge cases (PRD §W.3) | **N/A for Step 1** | Those four cases concern the watering loop and live on the SDD branch's Step 2 spec, not here. |
 | Schemas validated at every boundary | **PASS** | Fastify's Zod type provider rejects malformed bodies before the handler runs. The client also parses GET responses through the same shared schema before trusting them. |
 | Acceptance criteria are testable | **PASS** | Every checkbox in PRD §1.6 maps to either a Vitest test (creation, persistence on reload) or to a quickstart.md manual-verification step (the dev command). |
-| Agent has a way to exercise the running app | **PASS (precondition)** | Playwright MCP is the default. The `/speckit-implement` task list will include explicit Playwright-driven verification of the homepage acceptance scenarios. If the MCP is unavailable at implementation time, the gap will be called out in the PR description per Principle II. |
+| Agent has a way to exercise the running app | **PASS (precondition)** | Playwright MCP is the default. The `/speckit.implement` task list will include explicit Playwright-driven verification of the homepage acceptance scenarios. If the MCP is unavailable at implementation time, the gap will be called out in the PR description per Principle II. |
 
 ### Principle III — User Experience
 
@@ -89,7 +89,7 @@ The relevant principles for this feature are I, II, III, IV, plus the Tech-Stack
 
 | Gate | Status | Evidence |
 |---|---|---|
-| `master` is built with the full SDD loop | **PASS (in progress)** | `/speckit-specify` produced `spec.md`; this `/speckit-plan` is producing `plan.md` + Phase-1 artifacts. `/speckit-tasks`, `/speckit-analyze`, and `/speckit-implement` follow. |
+| `master` is built with the full SDD loop | **PASS (in progress)** | `/speckit.specify` produced `spec.md`; this `/speckit.plan` is producing `plan.md` + Phase-1 artifacts. `/speckit.tasks`, `/speckit.analyze`, and `/speckit.implement` follow. |
 | Constitution Check runs against this file before Phase 0 and after Phase 1 | **PASS** | This section is the pre-Phase-0 check; it is re-run at the bottom of the plan after Phase 1 is fleshed out. |
 
 **Initial Constitution Check verdict: PASS, no violations to track.** No `Complexity Tracking` entries are required.
@@ -100,15 +100,15 @@ The relevant principles for this feature are I, II, III, IV, plus the Tech-Stack
 
 ```text
 specs/001-foundation-homepage/
-├── plan.md              # This file (/speckit-plan command output)
-├── research.md          # Phase 0 output (/speckit-plan command)
-├── data-model.md        # Phase 1 output (/speckit-plan command)
-├── quickstart.md        # Phase 1 output (/speckit-plan command)
-├── contracts/           # Phase 1 output (/speckit-plan command)
+├── plan.md              # This file (/speckit.plan command output)
+├── research.md          # Phase 0 output (/speckit.plan command)
+├── data-model.md        # Phase 1 output (/speckit.plan command)
+├── quickstart.md        # Phase 1 output (/speckit.plan command)
+├── contracts/           # Phase 1 output (/speckit.plan command)
 │   └── api.md           # REST contract for GET /api/ideas, POST /api/ideas
 ├── checklists/
-│   └── requirements.md  # Spec quality checklist (already created by /speckit-specify)
-└── tasks.md             # Phase 2 output (/speckit-tasks command - NOT created by /speckit-plan)
+│   └── requirements.md  # Spec quality checklist (already created by /speckit.specify)
+└── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
 ```
 
 ### Source Code (repository root)
@@ -215,7 +215,7 @@ See [research.md](./research.md). The questions resolved there were:
 1. **Entities** — see [data-model.md](./data-model.md). One entity (`Idea`) with explicit field types, validation rules, and the SQLite DDL. No state transitions in Step 1 (stage is fixed at 1).
 2. **Contracts** — see [contracts/api.md](./contracts/api.md). The two Step 1 endpoints (`GET /api/ideas`, `POST /api/ideas`) with request/response/error shapes referencing the shared Zod schemas.
 3. **Quickstart** — see [quickstart.md](./quickstart.md). Single-command dev workflow, manual-verification steps for the acceptance criteria that aren't covered by automated tests.
-4. **Agent context** — `CLAUDE.md` is updated to point at this plan between the `<!-- SPECKIT START -->` and `<!-- SPECKIT END -->` markers so downstream `/speckit-tasks` and `/speckit-implement` runs read the latest plan.
+4. **Agent context** — `CLAUDE.md` is updated to point at this plan between the `<!-- SPECKIT START -->` and `<!-- SPECKIT END -->` markers so downstream `/speckit.tasks` and `/speckit.implement` runs read the latest plan.
 
 ### Post-Phase-1 Constitution Re-Check
 
@@ -230,6 +230,6 @@ After fleshing out the data model, contracts, and quickstart, re-evaluating each
 
 **Post-design Constitution Check verdict: PASS.** No new complexity to track.
 
-## Phase 2 — Tasks (handled by `/speckit-tasks`, not this command)
+## Phase 2 — Tasks (handled by `/speckit.tasks`, not this command)
 
-`/speckit-plan` stops here. The next command, `/speckit-tasks`, will read this plan and the Phase-1 artifacts and produce a dependency-ordered `tasks.md`.
+`/speckit.plan` stops here. The next command, `/speckit.tasks`, will read this plan and the Phase-1 artifacts and produce a dependency-ordered `tasks.md`.
