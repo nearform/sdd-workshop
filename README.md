@@ -157,7 +157,7 @@ Open [http://localhost:5173](http://localhost:5173). You should see the Idea Gar
 
 **To reset to a clean state at any point:**
 ```bash
-rm -f data/garden.db   # the server recreates the schema on next boot
+npm run clean   # deletes data/garden.db; the server recreates the schema on next boot
 ```
 
 > The server uses Node 22+ with `--experimental-strip-types` (no build step). If startup fails, check your Node version: `node --version` — it must be 22.6 or higher.
@@ -398,7 +398,7 @@ git checkout step-5-implement
 **The app shows a blank screen or network errors**
 - Make sure both server and frontend are running (`npm run dev` starts both)
 - Check the server logs in the terminal — Fastify prints startup errors clearly
-- If the database is in a bad state: `rm -f data/garden.db` and restart
+- If the database is in a bad state: run `npm run clean` and restart
 
 ---
 
@@ -418,7 +418,7 @@ npm run dev          # http://localhost:5173
 /speckit-implement
 
 # 4. Reset database
-rm -f data/garden.db
+npm run clean
 
 # 5. See the SDD reference steps
 git checkout step-2-specify     # after specify
