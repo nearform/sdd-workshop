@@ -4,6 +4,8 @@
 
 This workshop is 90 minutes. By the end, you'll have run the full SDD loop on a real feature, experienced what each phase produces, and — if time allows — seen the code generated from your spec.
 
+The slides related to this workshop are available at [this link](https://docs.google.com/presentation/d/1WuzTQ0aRUVh458goitGlAGg2VY-nDRR1/edit?usp=sharing&ouid=102969072800342099511&rtpof=true&sd=true)
+
 ---
 
 ## What Is This Project?
