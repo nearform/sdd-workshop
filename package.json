@@ -17,7 +17,7 @@
     "clean": "rimraf data/garden.db"
   },
   "devDependencies": {
-    "concurrently": "^9.1.0",
+    "concurrently": "^9.2.4",
     "rimraf": "^6.0.1"
   }
 }
